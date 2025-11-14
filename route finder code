@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Route Finder</title>
+ <!-- Leaflet CSS from jsDelivr -->
+ <link
+ rel="stylesheet"
+ href="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.css" />
+ <!-- Leaflet Routing Machine CSS -->
+ <link rel="stylesheet"
+ href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routingmachine.css" />
+ <style>
+ body {
+ font-family: Arial, sans-serif;
+ margin: 0;
+ padding: 0;
+ }
+ #header {
+ background-color: #4CAF50;
+ color: white;
+ padding: 15px;
+ text-align: center;
+ }
+ #form-container {
+ padding: 20px;
+ background-color: #f2f2f2;
+ position: relative; /* For loader positioning */
+ }
+ #form-container form {
+ display: flex;
+ flex-wrap: wrap;
+ justify-content: center;
+ gap: 10px;
+ }
+ #form-container input[type="text"] {
+ padding: 10px;
+ width: 200px;
+ border: 1px solid #ccc;
+16
+ border-radius: 4px;
+ }
+ #form-container button {
+ padding: 10px 20px;
+ background-color: #4CAF50;
+ color: white;
+ border: none;
+ border-radius: 4px;
+ cursor: pointer;
+ }
+ #form-container button:hover {
+ background-color: #45a049;
+ }
+ #map {
+ height: 80vh;
+ width: 100%;
+ }
+ @media (max-width: 600px) {
+ #form-container form {
+ flex-direction: column;
+ align-items: center;
+ }
+ #form-container input[type="text"], #form-container button {
+ width: 90%;
+ }
+ }
+ /* Loader Styles */
+ #loader {
+ display: none; /* Hidden by default */
+ border: 8px solid #f3f3f3;
+ border-top: 8px solid #4CAF50;
+ border-radius: 50%;
+ width: 60px;
+ height: 60px;
+ animation: spin 1s linear infinite;
+ position: absolute;
+ top: 50%;
+ left: 50%;
+ margin: -30px 0 0 -30px;
+ z-index: 1000;
+ }
+ @keyframes spin {
+ 0% { transform: rotate(0deg); }
+ 100% { transform: rotate(360deg); }
+17
+ }
+ /* Error Message Styles */
+ #error-message {
+ color: red;
+ text-align: center;
+ margin-top: 10px;
+ }
+ </style>
+</head>
+<body>
+ <div id="header">
+ <h1>Route Finder</h1>
+ </div>
+ <div id="form-container">
+ <form id="route-form">
+ <input type="text" id="start" placeholder="Start Location" required />
+ <input type="text" id="end" placeholder="End Location" required />
+ <button type="submit">Find Route</button>
+ </form>
+ <div id="error-message"></div>
+ <div id="loader"></div>
+ </div>
+ <div id="map"></div>
+ <!-- Leaflet JS from jsDelivr -->
+ <script src="https://cdn.jsdelivr.net/npm/leaflet@1.9.4/dist/leaflet.js"></script>
+ <!-- Leaflet Routing Machine JS -->
+ <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routingmachine.js"></script>
+ <!-- Optional: Leaflet Control Geocoder for better geocoding -->
+<script src="https://unpkg.com/leaflet-control
+geocoder/dist/Control.Geocoder.js"></script>
+ <link rel="stylesheet"
+ href="https://unpkg.com/leaflet-control-geocoder/dist/Control.Geocoder.c />
+ <script>
+ // Check if Leaflet is loaded
+ if (typeof L === 'undefined') {
+ console.error('Leaflet.js failed to load.');
+ alert('Error: Leaflet.js failed to load. Please check the console for more
+details.');
+ } else {
+ console.log('Leaflet.js loaded successfully.');
+ }
+18
+ // Initialize the map and set its view to a default location
+ var map = L.map('map').setView([20, 0], 2); // World view
+ // Add OpenStreetMap tiles
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+ attribution:
+ '&copy; <a
+href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+ maxZoom: 19,
+ }).addTo(map);
+ console.log('Tile layer added.');
+ // Initialize the routing control (but do not add it yet)
+ var routingControl = null;
+ // Function to geocode a location using Nominatim
+ async function geocode(query) {
+ const url =
+https://nominatim.openstreetmap.org/search?format=json&q=${encodeURICompone
+nt(query)};
+ try {
+ const response = await fetch(url, {
+ method: 'GET',
+ headers: {
+ 'Accept': 'application/json',
+ },
+ });
+ if (!response.ok) {
+ throw new Error('Network response was not ok');
+ }
+ const data = await response.json();
+ if (data && data.length > 0) {
+ return [parseFloat(data[0].lat), parseFloat(data[0].lon)];
+ } else {
+ throw new Error('Location not found: ' + query);
+ }
+ } catch (error) {
+ console.error('Geocoding error:', error);
+ throw error;
+ }
+ }
+ // Function to show the loader
+ function showLoader() {
+19
+ document.getElementById('loader').style.display = 'block';
+ }
+ // Function to hide the loader
+ function hideLoader() {
+ document.getElementById('loader').style.display = 'none';
+ }
+ // Function to display error messages
+ function displayError(message) {
+ var errorDiv = document.getElementById('error-message');
+ errorDiv.textContent = message;
+ setTimeout(() => {
+ errorDiv.textContent = '';
+ }, 5000); // Clear error after 5 seconds
+ }
+ // Handle form submission
+ document.getElementById('route-form').addEventListener('submit',asyn
+ function (e) {
+ e.preventDefault(); // Prevent form from submitting normally
+ var start = document.getElementById('start').value.trim();
+ var end = document.getElementById('end').value.trim();
+ if (start === '' || end === '') {
+ displayError('Both start and end locations are required.');
+ return;
+ }
+ showLoader(); // Show loading indicator
+ try {
+ // Geocode the start and end locations
+ var [startLat, startLng] = await geocode(start);
+ var [endLat, endLng] = await geocode(end);
+ console.log('Start Coordinates:', startLat, startLng);
+ console.log('End Coordinates:', endLat, endLng);
+ // If a previous routingControl exists, remove it
+ if (routingControl !== null) {
+ map.removeControl(routingControl);
+ }
+20
+ // Initialize the routing control with the new waypoints
+ routingControl = L.Routing.control({
+ waypoints: [
+ L.latLng(startLat, startLng),
+ L.latLng(endLat, endLng),
+ ],
+ routeWhileDragging: false,
+ geocoder: L.Control.Geocoder.nominatim(),
+ show: true,
+ addWaypoints: false,
+ draggableWaypoints: false,
+ fitSelectedRoutes: true,
+ lineOptions: {
+ styles: [{ color: 'blue', weight: 4 }],
+ },
+ showAlternatives: false,
+ }).addTo(map);
+ // Optionally, add markers for start and end
+ L.marker([startLat, startLng]).addTo(map)
+ .bindPopup('Start: ' + start)
+ .openPopup();
+ L.marker([endLat, endLng]).addTo(map)
+ .bindPopup('End: ' + end);
+ } catch (error) {
+ displayError(error.message);
+ } finally {
+ hideLoader(); // Hide loading indicator
+ }
+ });
+ </script>
