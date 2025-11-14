@@ -1,0 +1,7 @@
+document.getElementById('route-form').addEventListener('submit', async function (e)
+{
+ e.preventDefault(); // Prevents the page from refreshing
+ var start = document.getElementById('start').value.trim();
+ var end = document.getElementById('end').value.trim();
+});
+2.13. G
