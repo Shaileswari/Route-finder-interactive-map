@@ -1,0 +1,20 @@
+<script>
+ // Check if Leaflet is loaded
+ if (typeof L === 'undefined') {
+ console.error('Leaflet.js failed to load.');
+ alert('Error: Leaflet.js failed to load. Please check the console for more
+details.');
+ } else {
+ console.log('Leaflet.js loaded successfully.');
+ }
+ // Initialize the map and set its view to a default location
+ var map = L.map('map').setView([20, 0], 2); // World view
+ // Add OpenStreetMap tiles
+ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+ attribution:
+ '&copy; <a
+href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+ maxZoom: 19,
+ }).addTo(map);
+ console.log('Tile layer added.');
+</script>
