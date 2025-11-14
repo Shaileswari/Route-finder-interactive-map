@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Router Finder</title>
+ <style>
+ body {
+ font-family: Arial, sans-serif;
+ margin: 0;
+ padding: 0;
+ background: url('https://via.placeholder.com/1500x800') no-repeat center center
+fixed;
+ background-size: cover;
+ color: white;
+ }
+ header {
+ text-align: center;
+ padding: 30px;
+ background-color: rgba(0, 0, 0, 0.7);
+ }
+ header h1 {
+ font-size: 36px;
+ margin: 0;
+ }
+ header p {
+ font-size: 18px;
+ margin: 10px 0 0;
+ }
+ .content {
+ padding: 20px;
+ background: rgba(0, 0, 0, 0.6);
+ margin: 20px auto;
+ width: 90%;
+ max-width: 800px;
+ border-radius: 10px;
+ }
+ .content img {
+ width: 100%;
+ border-radius: 10px;
+13
+ }
+ .content p {
+ font-size: 18px;
+ margin: 20px 0;
+ }
+ .custom-link {
+ display: inline-block;
+ text-decoration: none;
+ background-color: #007bff;
+ color: white;
+ padding: 10px 20px;
+ border-radius: 5px;
+ font-size: 16px;
+ transition: background-color 0.3s;
+ }
+ .custom-link:hover {
+ background-color: #0056b3;
+ }
+ footer {
+ text-align: center;
+ padding: 10px;
+ background-color: rgba(0, 0, 0, 0.7);
+ color: white;
+ position: fixed;
+ width: 100%;
+ bottom: 0;
+ }
+ </style>
+</head>
+<body>
+ <header>
+ <h1>Router Finder</h1>
+ <p>Your ultimate solution for finding the best router worldwide</p>
+ </header>
+ <div class="content">
+ <img src="C:\Users\malla\Downloads\Bản đồ thế giới 3D lắp led - World map
+2023.jpg" alt="Router Image">
+<p>
+A router finder is a tool or software application designed to help users identify the
+best router for their specific needs, whether it's for home networking, business, or
+high-performance applications like gaming or streaming. By evaluating factors such
+as signal strength, speed, coverage area, and compatibility with devices, a router
+finder assists in narrowing down the most suitable options from a wide range of
+available models. Some advanced router finders even incorporate user preferences,
+14
+such as budget constraints, specific features (e.g., dual-band Wi-Fi, parental controls,
+or advanced security protocols), and the size or layout of the space where the router
+will be used. This makes it easier for users to make informed decisions and optimize
+their internet connectivity.</p>
+<br>
+</br>
+<center>
+ <a href="D:\pdf notes\wt.html" class="custom-link" aria-label="Navigate to the
+Router Finder page">Click to go to the Router Finder</a>
+</div>
+ <footer>
+ &copy; Router Finder by v sem cse B.
+ </footer>
+</body>
+</html>
