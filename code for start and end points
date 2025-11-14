@@ -1,0 +1,4 @@
+arker([startLat, startLng]).addTo(map)
+ .bindPopup('Start: ' + start).openPopup();
+L.marker([endLat, endLng]).addTo(map)
+ .bindPopup('End: ' + end);
